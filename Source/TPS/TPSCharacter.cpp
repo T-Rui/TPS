@@ -27,6 +27,7 @@ ATPSCharacter::ATPSCharacter()
     bAimTransition = false;
     bEquip = false;
     bShoot = false;
+	bHit = false;
 	killnum = 0;
 
     pHolsterBelt = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HolsterBelt"));
@@ -151,10 +152,11 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
     PlayerInputComponent->BindAction(TEXT("Crouch"), IE_Pressed, this, &ATPSCharacter::ToggleCrouch);
     PlayerInputComponent->BindAction(TEXT("Equip"), IE_Pressed, this, &ATPSCharacter::ToggleEquip);
     PlayerInputComponent->BindAction(TEXT("Aim"), IE_Pressed, this, &ATPSCharacter::Aim_Start);
-    PlayerInputComponent->BindAction(TEXT("Aim"), IE_Released, this, &ATPSCharacter::Aim_End);
+    //PlayerInputComponent->BindAction(TEXT("Aim"), IE_Released, this, &ATPSCharacter::Aim_End);
     PlayerInputComponent->BindAction(TEXT("Shoot"), IE_Pressed, this, &ATPSCharacter::Shoot);
     PlayerInputComponent->BindAction(TEXT("PickUp"), IE_Pressed, this, &ATPSCharacter::PickUp);
     PlayerInputComponent->BindAction(TEXT("Reload"), IE_Pressed, this, &ATPSCharacter::Reload);
+	PlayerInputComponent->BindAction(TEXT("Hit"), IE_Pressed, this, &ATPSCharacter::Hit);
 }
 
 void ATPSCharacter::MoveForward(float Value) {
@@ -229,24 +231,66 @@ void ATPSCharacter::timerFunction_UnEquip() {
     pGun->AttachToComponent(GetMesh(), rules, TEXT("Socket_AR"));
     GetWorld()->GetTimerManager().ClearTimer(timerHandle_UnEquip);
 }
+void ATPSCharacter::Hit()
+{
+	if (bEquip)
+	{
+		bHit = false;
+	}
+	else
+	{
+		bHit = true;
+		GetWorld()->GetTimerManager().SetTimer(timerHandele_Hit, this, &ATPSCharacter::timerFunction_Hit, 1.f, false, 1.333f);
+	}
+}
+void ATPSCharacter::timerFunction_Hit()
+{
+	bHit = false;
+	GetWorld()->GetTimerManager().ClearTimer(timerHandele_Hit);
+}
+
 void ATPSCharacter::Aim_Start() {
-    bAim = true;
-    bUseControllerRotationYaw = true;
-    GetCharacterMovement()->bOrientRotationToMovement = false;
+	if (bAim)
+	{
+		Aim_End();
+	} 
+	else
+	{
+		bAim = true;
+		bUseControllerRotationYaw = true;
+		GetCharacterMovement()->bOrientRotationToMovement = false;
 
-    currentAimCameraLocation = pSpring->SocketOffset;
-    desiredAimCameraLocation = FVector(150.f, 60.f, 30.f);
-    currentFov = pCamera->FieldOfView;
-    desiredFov = 65.f;
-    pTimeline_AimCamera->PlayFromStart();
+		currentAimCameraLocation = pSpring->SocketOffset;
+		desiredAimCameraLocation = FVector(150.f, 60.f, 30.f);
+		currentFov = pCamera->FieldOfView;
+		desiredFov = 65.f;
+		pTimeline_AimCamera->PlayFromStart();
 
-    if (GetVelocity().Size() > 200.f) {
-        bAimTransition = false;
-    }
-    else {
-        bAimTransition = true;
-        GetWorld()->GetTimerManager().SetTimer(timerHandle_AimTransition, this, &ATPSCharacter::timerFunction_AimTransition, 1.f, false, 0.1f);
-    }
+		if (GetVelocity().Size() > 200.f) {
+			bAimTransition = false;
+		}
+		else {
+			bAimTransition = true;
+			GetWorld()->GetTimerManager().SetTimer(timerHandle_AimTransition, this, &ATPSCharacter::timerFunction_AimTransition, 1.f, false, 0.1f);
+		}
+	}
+	/* bAim = true;
+	 bUseControllerRotationYaw = true;
+	 GetCharacterMovement()->bOrientRotationToMovement = false;
+
+	 currentAimCameraLocation = pSpring->SocketOffset;
+	 desiredAimCameraLocation = FVector(150.f, 60.f, 30.f);
+	 currentFov = pCamera->FieldOfView;
+	 desiredFov = 65.f;
+	 pTimeline_AimCamera->PlayFromStart();
+
+	 if (GetVelocity().Size() > 200.f) {
+		 bAimTransition = false;
+	 }
+	 else {
+		 bAimTransition = true;
+		 GetWorld()->GetTimerManager().SetTimer(timerHandle_AimTransition, this, &ATPSCharacter::timerFunction_AimTransition, 1.f, false, 0.1f);
+	 }*/
 }
 void ATPSCharacter::timerFunction_AimTransition() {
     bAimTransition = false;
@@ -273,7 +317,7 @@ void ATPSCharacter::Aim_End() {
 }
 void ATPSCharacter::Shoot() {
     int32 nCurrentAmmo = FCString::Atoi(*Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->currentAmmo.ToString());
-    if ( nCurrentAmmo >0) {
+    if (bEquip && nCurrentAmmo >0) {
         bShoot = true;
         nCurrentAmmo -= 1;
         Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->Shoot();

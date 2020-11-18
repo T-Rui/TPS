@@ -23,20 +23,31 @@ protected:
 
     void MoveForward(float Value);
     void MoveRight(float Value);
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void StartJump();
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void ToggleCrouch();
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void ToggleEquip();
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void Aim_Start();
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void Aim_End();
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void Shoot();
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void PickUp();
+	UFUNCTION(BlueprintCallable, Category = "Input")
     void Reload();
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void Hit();
 
     void timerFunction_Jump();
     void timerFunction_AimTransition();
     void timerFunction_Equip();
     void timerFunction_UnEquip();
     void timerFunction_Shoot();
+	void timerFunction_Hit();
 
 	void EndGame();
 
@@ -45,6 +56,7 @@ protected:
     FTimerHandle timerHandle_Equip;
     FTimerHandle timerHandle_UnEquip;
     FTimerHandle timerHandle_Shoot;
+	FTimerHandle timerHandele_Hit;
 
     class UCurveFloat* pCurveCamera;
     FTimeline* pTimeline_CrouchCamera;
@@ -113,6 +125,8 @@ public:
     bool bEquip;
     UPROPERTY(BlueprintReadOnly)
     bool bShoot;
+	UPROPERTY(BlueprintReadOnly)
+	bool bHit;
 	UPROPERTY(BlueprintReadWrite)
 	int32 killnum;
 
