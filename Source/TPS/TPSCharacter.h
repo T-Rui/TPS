@@ -103,6 +103,7 @@ public:
 
     class USkeletalMeshComponent* pHolsterBelt;
     class USkeletalMeshComponent* pHolster;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
     class USkeletalMeshComponent* pGun;
     class USpringArmComponent* pSpring;
     class UCameraComponent* pCamera;
@@ -127,6 +128,12 @@ public:
     bool bShoot;
 	UPROPERTY(BlueprintReadOnly)
 	bool bHit;
+	UPROPERTY(BlueprintReadWrite)
+	int32 nCurrentAm;
+	UPROPERTY(BlueprintReadWrite)
+	int32 nCurrentGrenad = 10;
+	UPROPERTY(BlueprintReadWrite)
+	int32 nAllGrenad = 30;
 	UPROPERTY(BlueprintReadWrite)
 	int32 killnum;
 

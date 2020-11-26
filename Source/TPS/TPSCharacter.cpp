@@ -316,32 +316,32 @@ void ATPSCharacter::Aim_End() {
     }
 }
 void ATPSCharacter::Shoot() {
-    int32 nCurrentAmmo = FCString::Atoi(*Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->currentAmmo.ToString());
-    if (bEquip && nCurrentAmmo >0) {
+	nCurrentAm = FCString::Atoi(*Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->currentAmmo.ToString());
+    if (bEquip && nCurrentAm >0) {
         bShoot = true;
-        nCurrentAmmo -= 1;
+		nCurrentAm -= 1;
         Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->Shoot();
         GetWorld()->GetTimerManager().SetTimer(timerHandle_Shoot, this, &ATPSCharacter::timerFunction_Shoot, 1.f, false, 0.6f);
         UGameplayStatics::SpawnEmitterAttached(pParticleShell, pGun, TEXT("Socket_Shell"), FVector(0,0,0), FRotator(0,0,0),EAttachLocation::SnapToTarget);
         
-        FRotator path(Pitch, GetControlRotation().Yaw, GetControlRotation().Roll);
-        FHitResult hitResult;
-        GetWorld()->LineTraceSingleByChannel(hitResult, pGun->GetSocketLocation("Socket_Muzzle"), pGun->GetSocketLocation("Socket_Muzzle")+path.Vector().GetSafeNormal()*1000.f, ECollisionChannel::ECC_Visibility);
+        //FRotator path(Pitch, GetControlRotation().Yaw, GetControlRotation().Roll);
+       //FHitResult hitResult;
+       //GetWorld()->LineTraceSingleByChannel(hitResult, pGun->GetSocketLocation("Socket_Muzzle"), pGun->GetSocketLocation("Socket_Muzzle")+path.Vector().GetSafeNormal()*1000.f, ECollisionChannel::ECC_Visibility);
 
-        UDecalComponent* pDecal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), pMaterialDecal, FVector(5.f, 5.f, 5.f), hitResult.Location);
-        pDecal->SetFadeScreenSize(0.001);
+        //UDecalComponent* pDecal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), pMaterialDecal, FVector(5.f, 5.f, 5.f), hitResult.Location);
+        //pDecal->SetFadeScreenSize(0.001);
 
         GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(pCameraShake);
         AddControllerPitchInput(-4.f);
 
-		FRotator start(Pitch, GetControlRotation().Yaw, GetControlRotation().Roll);
+		//FRotator start(Pitch, GetControlRotation().Yaw, GetControlRotation().Roll);
 		//DrawDebugLine(GetWorld(),pGun->GetSocketLocation(TEXT("Socker_Muzzle")), pGun->GetSocketLocation(TEXT("Socker_Muzzle")) + start.Vector().GetSafeNormal() * 1000, FColor::Blue, true, 1.f);
 
 		//Set Spawn Collision Handling Override
-		FActorSpawnParameters ActorSpawnParams;
-		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		//FActorSpawnParameters ActorSpawnParams;
+		//ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 		//FTransform Spawnlocation;
-		GetWorld()->SpawnActor<Aprojectile>(Aprojectile::StaticClass(), hitResult.Location, start, ActorSpawnParams);
+		//GetWorld()->SpawnActor<Aprojectile>(Aprojectile::StaticClass(), hitResult.Location, start, ActorSpawnParams);
 
 		
     }
@@ -369,11 +369,13 @@ void ATPSCharacter::PickUp() {
         if ((GetActorLocation() - pActor->GetActorLocation()).Size() < nMinDis) {
             nMinDis = (GetActorLocation() - pActor->GetActorLocation()).Size();
             pPickUpActor = pActor;
+			nAllGrenad = nAllGrenad + 10;
         }
     }
     Array_PickUps.Remove(pPickUpActor);
     pPickUpActor->Destroy();
     Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->AddAmmo(30);
+	
 }
 void ATPSCharacter::Reload() {
     int32 nCurrentAmmo = FCString::Atoi(*Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->currentAmmo.ToString());
@@ -382,6 +384,10 @@ void ATPSCharacter::Reload() {
         Cast<AGameMode_Main>(GetWorld()->GetAuthGameMode())->pHUD->Reload();
         pGun->PlayAnimation(pReloadARAnim, false);
     }
+	if (nCurrentGrenad != 10)
+	{
+		nCurrentGrenad = 10;
+	}
 }
 void ATPSCharacter::timelineCallback_Function_AimCamera(float Value) {
     FVector location = FMath::Lerp(currentAimCameraLocation, desiredAimCameraLocation, Value);
