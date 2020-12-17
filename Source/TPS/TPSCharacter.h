@@ -21,111 +21,111 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-    void MoveForward(float Value);
-    void MoveRight(float Value);
+	void MoveForward(float Value);
+	void MoveRight(float Value);
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void StartJump();
+	void StartJump();
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void ToggleCrouch();
+	void ToggleCrouch();
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void ToggleEquip();
+	void ToggleEquip();
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void Aim_Start();
+	void Aim_Start();
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void Aim_End();
+	void Aim_End();
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void Shoot();
+	void Shoot();
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void PickUp();
+	void PickUp();
 	UFUNCTION(BlueprintCallable, Category = "Input")
-    void Reload();
+	void Reload();
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void Hit();
 
-    void timerFunction_Jump();
-    void timerFunction_AimTransition();
-    void timerFunction_Equip();
-    void timerFunction_UnEquip();
-    void timerFunction_Shoot();
+	void timerFunction_Jump();
+	void timerFunction_AimTransition();
+	void timerFunction_Equip();
+	void timerFunction_UnEquip();
+	void timerFunction_Shoot();
 	void timerFunction_Hit();
 
 	void EndGame();
 
-    FTimerHandle timerHandle_Jump;
-    FTimerHandle timerHandle_AimTransition;
-    FTimerHandle timerHandle_Equip;
-    FTimerHandle timerHandle_UnEquip;
-    FTimerHandle timerHandle_Shoot;
+	FTimerHandle timerHandle_Jump;
+	FTimerHandle timerHandle_AimTransition;
+	FTimerHandle timerHandle_Equip;
+	FTimerHandle timerHandle_UnEquip;
+	FTimerHandle timerHandle_Shoot;
 	FTimerHandle timerHandele_Hit;
 
-    class UCurveFloat* pCurveCamera;
-    FTimeline* pTimeline_CrouchCamera;
-    FTimeline* pTimeline_AimCamera;
-    FOnTimelineFloat timelineCallback_CrouchCamera;
-    FOnTimelineFloat timelineCallback_AimCamera;
+	class UCurveFloat* pCurveCamera;
+	FTimeline* pTimeline_CrouchCamera;
+	FTimeline* pTimeline_AimCamera;
+	FOnTimelineFloat timelineCallback_CrouchCamera;
+	FOnTimelineFloat timelineCallback_AimCamera;
 
-    FVector currentCrouchCameraLocation;
-    FVector desiredCrouchCameraLocation;
-    FVector currentAimCameraLocation;
-    FVector desiredAimCameraLocation;
-    float currentFov;
-    float desiredFov;
+	FVector currentCrouchCameraLocation;
+	FVector desiredCrouchCameraLocation;
+	FVector currentAimCameraLocation;
+	FVector desiredAimCameraLocation;
+	float currentFov;
+	float desiredFov;
 
-    UAnimationAsset* pPoseARAnim;
-    UAnimationAsset* pEquipHolsterAnim;
-    UAnimationAsset* pEquipARAnim;
-    UAnimSequence* pEquipCharacterAnim;
-    UAnimationAsset* pUnEquipHolsterAnim;
-    UAnimationAsset* pUnEquipARAnim;
-    UAnimSequence* pUnEquipCharacterAnim;
-    UAnimationAsset* pReloadARAnim;
-    UAnimSequence* pReloadAnim;
+	UAnimationAsset* pPoseARAnim;
+	UAnimationAsset* pEquipHolsterAnim;
+	UAnimationAsset* pEquipARAnim;
+	UAnimSequence* pEquipCharacterAnim;
+	UAnimationAsset* pUnEquipHolsterAnim;
+	UAnimationAsset* pUnEquipARAnim;
+	UAnimSequence* pUnEquipCharacterAnim;
+	UAnimationAsset* pReloadARAnim;
+	UAnimSequence* pReloadAnim;
 
-    UFUNCTION()
-    void timelineCallback_Function_CrouchCamera(float Value);
-    UFUNCTION()
-    void timelineCallback_Function_AimCamera(float Value);
+	UFUNCTION()
+	void timelineCallback_Function_CrouchCamera(float Value);
+	UFUNCTION()
+	void timelineCallback_Function_AimCamera(float Value);
 	UFUNCTION(BlueprintCallable, Category = "KillEnemy")
 	void KillNumEnemy();
 
-    float axisMoveForward;
-    float axisMoveRight;
+	float axisMoveForward;
+	float axisMoveRight;
 	TSubclassOf<UCameraShake>pCameraShake;
-    UParticleSystem* pParticleShell;
-    UMaterialInterface* pMaterialDecal;
+	UParticleSystem* pParticleShell;
+	UMaterialInterface* pMaterialDecal;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-    class USkeletalMeshComponent* pHolsterBelt;
-    class USkeletalMeshComponent* pHolster;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-    class USkeletalMeshComponent* pGun;
-    class USpringArmComponent* pSpring;
-    class UCameraComponent* pCamera;
+	class USkeletalMeshComponent* pHolsterBelt;
+	class USkeletalMeshComponent* pHolster;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USkeletalMeshComponent* pGun;
+	class USpringArmComponent* pSpring;
+	class UCameraComponent* pCamera;
 
-    TArray<AActor_PickUp*> Array_PickUps;
+	TArray<AActor_PickUp*> Array_PickUps;
 
-    UPROPERTY(BlueprintReadOnly)
-    bool bJump;
-    UPROPERTY(BlueprintReadOnly)
-    bool bCrouch;
-    UPROPERTY(BlueprintReadOnly)
-    bool bAim;
-    UPROPERTY(BlueprintReadOnly)
-    bool bAimTransition;
-    UPROPERTY(BlueprintReadOnly)
-    float Pitch;
-    UPROPERTY(BlueprintReadOnly)
-    float Direction;
-    UPROPERTY(BlueprintReadOnly)
-    bool bEquip;
-    UPROPERTY(BlueprintReadOnly)
-    bool bShoot;
+	UPROPERTY(BlueprintReadOnly)
+	bool bJump;
+	UPROPERTY(BlueprintReadOnly)
+	bool bCrouch;
+	UPROPERTY(BlueprintReadOnly)
+	bool bAim;
+	UPROPERTY(BlueprintReadOnly)
+	bool bAimTransition;
+	UPROPERTY(BlueprintReadOnly)
+	float Pitch;
+	UPROPERTY(BlueprintReadOnly)
+	float Direction;
+	UPROPERTY(BlueprintReadOnly)
+	bool bEquip;
+	UPROPERTY(BlueprintReadOnly)
+	bool bShoot;
 	UPROPERTY(BlueprintReadOnly)
 	bool bHit;
 	UPROPERTY(BlueprintReadWrite)
@@ -137,7 +137,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int32 killnum;
 
-    //UPROPERTY(BlueprintReadOnly)
+	//UPROPERTY(BlueprintReadOnly)
 	//class Aprojectile * ProjectileClass;
-	
+
 };
